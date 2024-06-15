@@ -9,8 +9,8 @@ import (
 
 	"github.com/festech-cloud/todo/controller"
 	"github.com/festech-cloud/todo/database"
-	middleware "github.com/festech-cloud/todo/middleware"
 	"github.com/festech-cloud/todo/routes"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
@@ -45,7 +45,18 @@ func main() {
 	// Initialize Gin router
 	router := gin.New()
 	router.Use(gin.Logger())
-	router.Use(middleware.CORSMiddleware())
+	router.Use(cors.Default())
+
+	// Custom CORS middleware configuration
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://example.com"}, // Update with your allowed origins
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
+
 	router.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK,
 			gin.H{"status": true, "message": "App is running"})
