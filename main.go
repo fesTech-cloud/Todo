@@ -3,11 +3,13 @@ package main
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"os"
 	"time"
 
 	"github.com/festech-cloud/todo/controller"
 	"github.com/festech-cloud/todo/database"
+	middleware "github.com/festech-cloud/todo/middleware"
 	"github.com/festech-cloud/todo/routes"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -43,6 +45,11 @@ func main() {
 	// Initialize Gin router
 	router := gin.New()
 	router.Use(gin.Logger())
+	router.Use(middleware.CORSMiddleware())
+	router.GET("/", func(c *gin.Context) {
+		c.JSON(http.StatusOK,
+			gin.H{"status": true, "message": "App is running"})
+	})
 
 	// Setup routes
 	routes.TodoRoutes(router)
