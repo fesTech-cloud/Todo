@@ -2,5 +2,11 @@ services:
   - type: web
     name: my-go-app
     env: go
+    region: oregon  # or any other preferred region
     buildCommand: go build -o main main.go
     startCommand: ./main
+    plan: free  # Choose the appropriate plan
+    envVars:
+      - key: GO_ENV
+        value: production
+    autoDeploy: true  # Automatically deploy on every push to the branch
